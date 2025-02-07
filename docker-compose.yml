@@ -5,6 +5,8 @@ services:
     image: mysql:8.0
     container_name: termcompass_DB
     restart: always
+    env_file:
+      - .env  # 환경 변수 파일 사용
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -13,13 +15,15 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./sql:/docker-entrypoint-initdb.d  # 초기 SQL 실행
+      - mysql_data:/var/lib/mysql  # MySQL 데이터 저장 (영속성 유지)
+      - ./sql:/docker-entrypoint-initdb.d/  # 초기 SQL 실행
+      - ./docker/my.cnf:/etc/mysql/my.cnf  # MySQL 설정 적용
     networks:
       - my_network
 
 networks:
   my_network:
+    driver: bridge  # 명시적으로 bridge 네트워크 설정
 
 volumes:
   mysql_data:

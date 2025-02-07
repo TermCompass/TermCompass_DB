@@ -16,10 +16,10 @@ USE termcompass;
    
 /* -- [현재 등급 심사 현황 테이블] -- */
 CREATE TABLE company (
-    company_id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     url VARCHAR(255),
-    `rank` ENUM('A','B','C') NOT NULL,       -- `rank`
+    `rank` ENUM('A','B','C','D','E') NOT NULL,       -- `rank`
     fluctuate ENUM('UP','NONE','DOWN') NOT NULL,
     file TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -27,30 +27,30 @@ CREATE TABLE company (
 
 /* -- [문제 테이블] -- */
 CREATE TABLE problem (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    company_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    company_id BIGINT,
     content TEXT
 );
 
 /* -- [문제 목록] -- */
 CREATE TABLE problem_list (
-    problem_id INT,
+    problem_id BIGINT,
     target TEXT,
-    case_id INT NULL,
+    case_id BIGINT NULL,
     case_target VARCHAR(255) NULL,
-    standard_id INT NULL,
+    standard_id BIGINT NULL,
     standard_target VARCHAR(255) NULL,
-    regulation_id INT NULL,
+    regulation_id BIGINT NULL,
     regulation_target VARCHAR(255) NULL
 );
 
 /* -- [특정기업 등급 심사이력] -- */
 CREATE TABLE company_history (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    company_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    company_id BIGINT,
     name VARCHAR(255),
     url VARCHAR(255),
-    `rank` ENUM('A','B','C'),           -- rank
+    `rank` ENUM('A','B','C','D','E'),           -- rank
     fluctuate ENUM('UP','NONE','DOWN'),
     file TEXT,
     created_at TIMESTAMP
@@ -58,33 +58,33 @@ CREATE TABLE company_history (
 
 /* -- [히스토리] -- */
 CREATE TABLE problems_history (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    history_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    history_id BIGINT,
     content TEXT
 );
 
 /* -- [히스토리 리스트] -- */
 CREATE TABLE problem_history_list (
-    problem_history_id INT,
+    problem_history_id BIGINT,
     target TEXT,
-    case_id INT NULL,
+    case_id BIGINT NULL,
     case_target VARCHAR(255) NULL,
-    standard_id INT NULL,
+    standard_id BIGINT NULL,
     standard_target VARCHAR(255) NULL,
-    regulation_id INT NULL,
+    regulation_id BIGINT NULL,
     regulation_target VARCHAR(255) NULL
 );
 
 /* -- [분류] -- */
 CREATE TABLE category (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, 
     name VARCHAR(255)
 );
 
 /* -- [표준 약관] -- */
 CREATE TABLE standard (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    category_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT,
     name VARCHAR(255),
     updated_at TIMESTAMP,
     created_at TIMESTAMP,
@@ -94,8 +94,8 @@ CREATE TABLE standard (
 
 /* -- [판례] -- */
 CREATE TABLE `case` ( -- `case`
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    category_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT,
     name VARCHAR(255),
     case_end_at TIMESTAMP,
     created_at TIMESTAMP
@@ -103,8 +103,8 @@ CREATE TABLE `case` ( -- `case`
 
 /* -- [규제 법령] -- */
 CREATE TABLE regulations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    category_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT,
     is_active BOOLEAN,
     law_name VARCHAR(255),
     effect_at TIMESTAMP,
@@ -113,8 +113,8 @@ CREATE TABLE regulations (
 
 /* -- [사용자] -- */
 CREATE TABLE IF NOT EXISTS `user` ( -- `user`
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    account_type ENUM('PERSONAL','COMPANY'),
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    account_type ENUM('PERSONAL','COMPANY', 'ADMIN'),
     email VARCHAR(255),
     number VARCHAR(255),
     password VARCHAR(255),
@@ -124,35 +124,36 @@ CREATE TABLE IF NOT EXISTS `user` ( -- `user`
 
 /* -- [고객 타입 enum 테이블] -- */
 CREATE TABLE account_type (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    type ENUM('PERSONAL', 'COMPANY') NOT NULL
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    type ENUM('PERSONAL', 'COMPANY', 'ADMIN') NOT NULL
 );
 
 /* -- [작업 타입 enum 테이블] -- */
 CREATE TABLE record_type (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     type ENUM('REVIEW', 'GENERATE', 'CHAT') NOT NULL
 );
 
 /* -- [기록] -- */
 CREATE TABLE IF NOT EXISTS record (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT,
-  record_type ENUM('REVIEW', 'GENERATE', 'CHAT'),
-  result TEXT
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT,
+    record_type ENUM('REVIEW', 'GENERATE', 'CHAT'),
+    result TEXT
 );
 
 /* -- [사용자 요청 기록] -- */
 CREATE TABLE IF NOT EXISTS request (
-  id INT AUTO_INCREMENT PRIMARY KEY, -- 기록 ID
-  record_id INT,
-  request TEXT,
-  file TEXT,
-  standard_id INT DEFAULT 0,
-  case_id INT DEFAULT 0,
-  answer TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id BIGINT AUTO_INCREMENT PRIMARY KEY, -- 기록 ID
+    record_id BIGINT,
+    request TEXT,
+    file TEXT,
+    standard_id BIGINT DEFAULT 0,
+    case_id BIGINT DEFAULT 0,
+    answer TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 /* =========================================
    3) 임베딩 테이블
@@ -160,8 +161,8 @@ CREATE TABLE IF NOT EXISTS request (
 
 /* -- [법령 임베딩] -- */
 CREATE TABLE reg_embedding (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    regulation_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    regulation_id BIGINT,
     article_number TEXT,
     content TEXT,
     embedding TEXT
@@ -169,8 +170,8 @@ CREATE TABLE reg_embedding (
 
 /* -- [표준 약관 임베딩] -- */
 CREATE TABLE standard_embedding (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    standard_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    standard_id BIGINT,
     article_number TEXT,
     content TEXT,
     embedding TEXT
@@ -178,12 +179,13 @@ CREATE TABLE standard_embedding (
 
 /* -- [판례 임베딩] -- */
 CREATE TABLE case_embedding (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    case_id INT,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    case_id BIGINT,
     article_number TEXT,
     content TEXT,
     embedding TEXT
 );
+
 
 /* =========================================
    4) 외래 키 설정 (ALTER TABLE)
@@ -277,7 +279,7 @@ ALTER TABLE standard_embedding
   ADD CONSTRAINT fk_standard_embedding_standard
   FOREIGN KEY (standard_id) REFERENCES standard(id);
 
-  /* [case -> case_embedding] */
+/* [case -> case_embedding] */
 ALTER TABLE case_embedding
   ADD CONSTRAINT fk_case_embedding_case
   FOREIGN KEY (case_id) REFERENCES `case`(id);

@@ -80,3 +80,52 @@ docker tag mysql:8.0 [도커 계정]/mysql:latest
 ```bash
 docker push [도커 계정]/mysql:latest
 ```
+
+### Azure VM 생성
+
+```bash
+ssh azureuser@10.0.0.5
+```
+
+
+### Azure VM 커맨드에서 도커 설치
+```bash
+# 도커 설치 확인
+docker --version
+
+# 도커 설치
+sudo apt update
+sudo apt install docker.io -y
+sudo apt install docker-compose -y
+sudo systemctl enable --now docker
+
+# 도커 실행 권한 확인
+docker ps
+
+# Permission denied 오류가 발생 시
+sudo usermod -aG docker $USER
+newgrp docker
+
+
+docker pull kimdaehyun99/msql
+
+docker images
+
+
+# 컨테이너 내부로 접속
+docker exec -it termcompass bash
+
+# 파일 존재 여부 확인
+ls -al /docker-entrypoint-initdb.d/
+ls -al /etc/mysql/
+
+# or 
+
+# MySQL 컨테이너 내부 접속
+docker exec -it termcompass_DB mysql -u termcompass -p
+
+# 테이블 데이터 확인
+SHOW DATABASES;
+USE termcompass;
+SHOW TABLES;
+```
