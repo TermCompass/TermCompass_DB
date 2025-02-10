@@ -18,10 +18,10 @@ USE termcompass;
 CREATE TABLE company (
     company_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
-    url VARCHAR(255),
+    `url` VARCHAR(255),
     `rank` ENUM('A','B','C','D','E') NOT NULL,       -- `rank`
     fluctuate ENUM('UP','NONE','DOWN') NOT NULL,
-    file TEXT,
+    `file` TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE problem (
 /* -- [문제 목록] -- */
 CREATE TABLE problem_list (
     problem_id BIGINT,
-    target TEXT,
+    `target` TEXT,
     case_id BIGINT NULL,
     case_target VARCHAR(255) NULL,
     standard_id BIGINT NULL,
@@ -48,11 +48,11 @@ CREATE TABLE problem_list (
 CREATE TABLE company_history (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     company_id BIGINT,
-    name VARCHAR(255),
-    url VARCHAR(255),
+    `name` VARCHAR(255),
+    `url` VARCHAR(255),
     `rank` ENUM('A','B','C','D','E'),           -- rank
     fluctuate ENUM('UP','NONE','DOWN'),
-    file TEXT,
+    `file` TEXT,
     created_at TIMESTAMP
 );
 
@@ -154,6 +154,36 @@ CREATE TABLE IF NOT EXISTS request (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+/* -- [list_law] -- */
+CREATE TABLE list_law (
+    law_id INT PRIMARY KEY,
+    law_name VARCHAR(255),
+    publication_date DATE,
+    effective_date DATE,
+    key_word VARCHAR(255)
+);
+
+/* -- [law] -- */
+CREATE TABLE law (
+    law_id   INT,                             
+    article_number VARCHAR(100),  
+    paragraph      VARCHAR(10),   
+    subparagraph   VARCHAR(10),   
+    item           VARCHAR(10),   
+    `text`           TEXT
+);
+
+/* -- [keyword_law] -- */
+CREATE TABLE keyword_law (
+    law_id   INT,                             
+    law_name VARCHAR(255),
+    name VARCHAR(255),
+    publication_date DATE,
+    effective_date DATE,
+    article_number VARCHAR(255),   
+    paragraph   VARCHAR(255),    
+    `text` TEXT
+);
 
 /* =========================================
    3) 임베딩 테이블
@@ -195,7 +225,7 @@ CREATE TABLE case_embedding (
 
 
 /* [category -> standard] */
-ALTER TABLE standard 
+ALTER TABLE `standard` 
   ADD CONSTRAINT fk_standard_category 
   FOREIGN KEY (category_id) REFERENCES category(id);
 
@@ -293,3 +323,8 @@ ALTER TABLE regulations
 ALTER TABLE `case`
   ADD CONSTRAINT fk_case_category
   FOREIGN KEY (category_id) REFERENCES category(id);
+
+-- /* [list_law -> law] */
+-- ALTER TABLE law
+--   ADD CONSTRAINT fk_list_law
+--   FOREIGN KEY (law_id) REFERENCES list_law(law_id);

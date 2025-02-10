@@ -49,7 +49,11 @@ docker-compose up -d
 #Docker 컨테이너 내부에서 MySQL 접속하기
 docker exec -it termcompass_DB mysql -u root -p
 
-# (MySQL 접속 상태에서) 수동으로 schema.sql 실행하기
+SHOW DATABASES; # DB가 뜨는지 확인!
+USE termcompass;
+SHOW TABLES; # 테이블 목록이 뜨는지 확인!
+
+# (테이블이 없으면)(MySQL 접속 상태에서) 수동으로 schema.sql 실행하기
 SOURCE /docker-entrypoint-initdb.d/schema.sql;
 ```
 

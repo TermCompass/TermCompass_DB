@@ -13,7 +13,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql  # MySQL 데이터 저장 (영속성 유지)
       - ./sql:/docker-entrypoint-initdb.d/  # 초기 SQL 실행
