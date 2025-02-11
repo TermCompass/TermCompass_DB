@@ -7,6 +7,7 @@ CREATE DATABASE termcompass;
 USE termcompass;
 
 
+
 /* =========================================
    2) 테이블 생성
    - rank 컬럼 -> `rank`로 감싸기
@@ -16,13 +17,20 @@ USE termcompass;
    
 /* -- [현재 등급 심사 현황 테이블] -- */
 CREATE TABLE company (
-    company_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255),
-    `url` VARCHAR(255),
-    `rank` ENUM('A','B','C','D','E') NOT NULL,       -- `rank`
-    fluctuate ENUM('UP','NONE','DOWN') NOT NULL,
-    `file` TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `name` TEXT,
+    `rank` ENUM('A', 'B', 'C', 'D', 'E') NOT NULL,
+    link VARCHAR(255),
+    logo VARCHAR(255)
+);
+
+CREATE TABLE termlist (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    company_id BIGINT NOT NULL,
+    content TEXT,
+    evaluation ENUM('ADVANTAGE', 'DISADVANTAGE') NOT NULL,
+    title VARCHAR(255),
+    summary TEXT
 );
 
 /* -- [문제 테이블] -- */
@@ -185,6 +193,27 @@ CREATE TABLE keyword_law (
     `text` TEXT
 );
 
+/* -- [case_law] -- */
+CREATE TABLE case_law (
+    case_id BIGINT NOT NULL,
+    case_name text,
+    judgment_date text
+);  
+
+/* -- [case_law_summary] -- */
+CREATE TABLE case_law_summary (
+    case_id BIGINT NOT NULL,
+    case_name text,
+    case_number text,
+    judgment_date DATE,
+    verdict VARCHAR(255),
+    court_name VARCHAR(255),
+    case_type VARCHAR(100),
+    judgment_type VARCHAR(100),
+    summary TEXT,
+    `path` TEXT
+);
+
 /* =========================================
    3) 임베딩 테이블
    ========================================= */
@@ -252,7 +281,7 @@ ALTER TABLE request
 /* [company -> problem] */
 ALTER TABLE problem 
   ADD CONSTRAINT fk_problem_company 
-  FOREIGN KEY (company_id) REFERENCES company(company_id);
+  FOREIGN KEY (company_id) REFERENCES company(id);
 
 /* [company_history -> problems_history] */
 ALTER TABLE problems_history 
@@ -328,3 +357,8 @@ ALTER TABLE `case`
 -- ALTER TABLE law
 --   ADD CONSTRAINT fk_list_law
 --   FOREIGN KEY (law_id) REFERENCES list_law(law_id);
+
+/* [list_law -> law] */
+ALTER TABLE termlist 
+  ADD CONSTRAINT fk_termlist_company 
+  FOREIGN KEY (company_id) REFERENCES company(id) ON DELETE CASCADE;

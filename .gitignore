@@ -1,2 +1,3 @@
 .env
 [DOCS]deploy.md
+./sql/init.sql
